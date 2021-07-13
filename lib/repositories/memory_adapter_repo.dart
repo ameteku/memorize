@@ -17,9 +17,19 @@ class MemoryAdapterRepo {
     BaseRepo.firestoreDbInstance().collection(adapterPath).doc(adapter.id).update(adapter.toJson());
   }
 
+  // void updateMemory(String adapterId, String memoryId, Memory memory) {
+  //   //List<Map<String,dynamic>> mems = memories.map((e) => e.toJson()).toList();
+  //   BaseRepo.firestoreDbInstance().collection(adapterPath).doc(adapterId).get().then((value) {
+  //     MemoryAdapter mem = MemoryAdapter.fromJson(value.data(), value.id);
+  //     mem.collection.remove(memory.key);
+  //   })update({'collection': mems});
+  // }
+
   void removeMemory(String adapterId, Memory memory) {
     BaseRepo.firestoreDbInstance().doc(adapterId).get().then((value) {
-      MemoryAdapter.fromJson(value.data(), value.id).collection?.remove(memory.key);
+      MemoryAdapter mem =MemoryAdapter.fromJson(value.data(), value.id)
+          ..collection?.remove(memory.key);
+      BaseRepo.firestoreDbInstance().doc(adapterId).update(mem.toJson());
     });
   }
 
