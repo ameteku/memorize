@@ -26,12 +26,24 @@ class _FlipCardState extends State<FlipCard> {
         controller: FlipCardController(),
         back: Card(
           child: Center(
-            child: Text(widget.memory.key),
+            child: Text(
+              widget.memory.key,
+              style: TextStyle(
+                fontSize: 40,
+              ),
+            ),
           ),
         ),
         front: Card(
+          color: Colors.black54,
           child: Center(
-            child: Text(widget.memory.value),
+            child: Text(
+              widget.memory.value,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+              ),
+            ),
           ),
         ),
       ),

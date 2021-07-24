@@ -15,21 +15,17 @@ class _CardsPageState extends State<CardsPage> {
   ScrollController controller = ScrollController();
   @override
   Widget build(BuildContext context) {
-    Memory _memory = widget.appState.memory ?? Memory(value: 'Nothing yet', key: 'Nothing yet');
+    Memory? _memory = widget.appState.memory;
+
     return Container(
-      height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-        controller: controller,
-        itemCount: 2,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            if (_memory != null) ...[
               Container(
                 height: MediaQuery.of(context).size.height * .8,
                 child: FlipCard(
-                  memory: _memory,
+                  memory: _memory!,
                 ),
               ),
               Row(
@@ -47,11 +43,20 @@ class _CardsPageState extends State<CardsPage> {
                       child: Text("Didn't get it :("))
                 ],
               )
+            ] else ...[
+              IconButton(
+                onPressed: null,
+                icon: Icon(Icons.celebration),
+                iconSize: 60,
+              ),
+              Center(
+                  heightFactor: 20,
+                  child: Text(
+                    'Quiz finished!!!',
+                  )),
             ],
-          ),
-        ),
-      ),
-    );
+          ],
+        ));
   }
 
   void nextCard(bool isCorrect) {

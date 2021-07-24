@@ -6,6 +6,7 @@ import 'package:memorize/models/user.dart';
 
 class AppState extends ChangeNotifier {
   MemoryAdapter? _memoryAdapter;
+  int memoryCount = 0;
   Memory? _memory;
   GraphData? _graphData;
   bool _newMemory = false;
@@ -21,6 +22,7 @@ class AppState extends ChangeNotifier {
   MemoryAdapter? get memoryAdapter => _memoryAdapter;
   set memoryAdapter(MemoryAdapter? memoryAdapter) {
     _memoryAdapter = memoryAdapter;
+    if (_memoryAdapter != null) memoryCount = 0;
     notifyListeners();
   }
 
@@ -39,28 +41,32 @@ class AppState extends ChangeNotifier {
   bool get newMemoryAdapter => _newMemory;
   set newMemoryAdapter(bool show) {
     _newMemory = show;
+
     notifyListeners();
   }
 
   //this updates the current memory and replsces the old memory with
   // a new memory to the memory
-  void getNewMemory(bool answer) {
+  getNewMemory(bool answer) {
     //update date for
+    memoryCount++;
     _memory?.isAnswered = true;
     _memory?.isMemorized = answer;
-    _memory = _memoryAdapter?.collection?.firstWhere((element) => element.isAnswered == false);
+
+    if (memoryCount < _memoryAdapter!.collection!.length) {
+      _memory = _memoryAdapter?.collection![memoryCount];
+    } else {
+      _memory = null;
+      memoryCount = 0;
+    }
 
     if (_memory == null) {
-      _memory = _memoryAdapter?.collection?.first;
-      notifyListeners();
-
-      //this is resetting th equiz
+      //this is resetting thequiz
       _memoryAdapter?.collection?.forEach((element) {
         element.isAnswered = false;
       });
-    } else {
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void managePop() {

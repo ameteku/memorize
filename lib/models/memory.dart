@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'memory.g.dart';
