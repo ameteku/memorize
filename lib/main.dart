@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memorize/models/graph_data.dart';
 import 'package:memorize/modules/cards_page.dart';
 import 'package:memorize/modules/details.dart';
 import 'package:memorize/modules/error_page.dart';
@@ -8,7 +7,6 @@ import 'package:memorize/modules/progress_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:memorize/routing/app_state.dart';
 
-import 'models/memory_adapter.dart';
 import 'modules/homepage.dart';
 import 'modules/loading_page.dart';
 import 'modules/login/login_page.dart';
@@ -52,7 +50,7 @@ class _MyAppState extends State<MyApp> {
 AppState theAppState = AppState();
 
 class Navigation extends StatefulWidget {
-  AppState _appState = theAppState;
+  final AppState _appState = theAppState;
 
   @override
   _NavigationState createState() => _NavigationState();
@@ -84,7 +82,7 @@ class _NavigationState extends State<Navigation> {
                           iconSize: 50,
                           icon: Icon(Icons.add),
                           onPressed: () {
-                            widget._appState.newMemoryAdapter = true;
+                            widget._appState.memoryStatus = MemoryStatus.New;
                           },
                         ),
                       )
@@ -123,7 +121,7 @@ class _NavigationState extends State<Navigation> {
                           appState: widget._appState,
                         ),
                       ),
-                    if (widget._appState.newMemoryAdapter)
+                    if (widget._appState.memoryStatus != null)
                       MaterialPage(
                           key: ValueKey('NewMemory'),
                           child: NewMemoryPage(
@@ -149,7 +147,7 @@ class _NavigationState extends State<Navigation> {
               ));
   }
 
-  bool get isHomePage => widget._appState.memoryAdapter == null && !widget._appState.newMemoryAdapter;
+  bool get isHomePage => widget._appState.memoryAdapter == null && widget._appState.memoryStatus == null;
 
   void displayDialog() {
     showDialog(

@@ -4,9 +4,12 @@ import 'package:memorize/models/memory.dart';
 import 'package:memorize/models/memory_adapter.dart';
 import 'package:memorize/models/user.dart';
 
+enum MemoryStatus { Edit, New }
+
 class AppState extends ChangeNotifier {
   MemoryAdapter? _memoryAdapter;
-  int memoryCount = 0;
+  MemoryStatus? _status;
+  int _memoryCount = 0;
   Memory? _memory;
   GraphData? _graphData;
   bool _newMemory = false;
@@ -17,12 +20,19 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  set memoryStatus(MemoryStatus? status) {
+    _status = status;
+    notifyListeners();
+  }
+
+  MemoryStatus? get memoryStatus => _status;
+
   User? get currentUser => _currentUser;
 
   MemoryAdapter? get memoryAdapter => _memoryAdapter;
   set memoryAdapter(MemoryAdapter? memoryAdapter) {
     _memoryAdapter = memoryAdapter;
-    if (_memoryAdapter != null) memoryCount = 0;
+    if (_memoryAdapter != null) _memoryCount = 0;
     notifyListeners();
   }
 
@@ -38,41 +48,37 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get newMemoryAdapter => _newMemory;
-  set newMemoryAdapter(bool show) {
-    _newMemory = show;
-
-    notifyListeners();
-  }
-
   //this updates the current memory and replsces the old memory with
-  // a new memory to the memory
+  // a new memory
   getNewMemory(bool answer) {
     //update date for
-    memoryCount++;
+    _memoryCount++;
     _memory?.isAnswered = true;
     _memory?.isMemorized = answer;
 
-    if (memoryCount < _memoryAdapter!.collection!.length) {
-      _memory = _memoryAdapter?.collection![memoryCount];
+    if (_memoryCount < _memoryAdapter!.collection!.length) {
+      _memory = _memoryAdapter?.collection![_memoryCount];
     } else {
-      _memory = null;
-      memoryCount = 0;
-    }
-
-    if (_memory == null) {
-      //this is resetting thequiz
       _memoryAdapter?.collection?.forEach((element) {
         element.isAnswered = false;
       });
     }
+
     notifyListeners();
   }
+
+  bool isEndOfQuiz() => _memoryCount >= _memoryAdapter!.collection!.length;
 
   void managePop() {
     if (_graphData != null) {
       print("popping graphData");
       _graphData = null;
+      notifyListeners();
+      return;
+    }
+
+    if (memoryStatus != null) {
+      memoryStatus = null;
       notifyListeners();
       return;
     }

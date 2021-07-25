@@ -1,4 +1,3 @@
-import 'package:memorize/models/graph_data.dart';
 import 'package:memorize/models/memory.dart';
 import 'package:json_annotation/json_annotation.dart';
 

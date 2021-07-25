@@ -1,9 +1,4 @@
-import 'dart:convert';
-//import 'dart:ffi';
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:csv/csv.dart';
 
 void extractMemories(FilePickerResult file) {
   // List csvFileContentList;

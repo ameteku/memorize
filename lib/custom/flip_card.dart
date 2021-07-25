@@ -4,7 +4,7 @@ import 'package:flip_card/flip_card.dart' as CustomFlip;
 import 'package:memorize/models/memory.dart';
 
 class FlipCard extends StatefulWidget {
-  Memory memory;
+  final Memory memory;
 
   FlipCard({required this.memory, Key? key}) : super(key: key);
 

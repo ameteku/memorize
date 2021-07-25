@@ -23,7 +23,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
   final _formKey = GlobalKey<FormBuilderState>();
   TextEditingController? titleController;
   FilePickerResult? spreadsheetFile;
-  String memoryName = 'My new Memory Collection';
+  String memoryName = 'My New Memory Collection';
 
   //index corresponds to the index of memory
   //this has a list of (2 index lists)
@@ -33,6 +33,9 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.appState.memoryStatus == MemoryStatus.Edit) {
+      memories = widget.appState.memoryAdapter!.collection!.map((e) => newMemoryEntry(e: e)).toList();
+    }
     titleController = TextEditingController();
     titleController?.text = memoryName;
   }
@@ -109,8 +112,8 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                         //this saves the new adapter
                         print('Adding adapter');
                         _memoryAdapterRepo.addAdapter(MemoryAdapter(
-                            name: titleController?.text, collection: allMemories, username: widget!.appState!.currentUser!.id!));
-                        widget.appState.newMemoryAdapter = false;
+                            name: titleController?.text, collection: allMemories, username: widget.appState.currentUser!.id!));
+                        widget.appState.memoryStatus = null;
                       },
                       child: Text('Save'),
                     ),
@@ -131,7 +134,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
     );
   }
 
-  Widget newMemoryEntry() {
+  Widget newMemoryEntry({Memory? e}) {
     List<TextEditingController> newEditors = addController();
     double width = MediaQuery.of(context).size.width;
     return Row(
@@ -141,7 +144,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
           width: width * 0.5,
           child: TextField(
             decoration: InputDecoration(
-              labelText: 'title',
+              labelText: e?.value ?? 'title',
             ),
             controller: newEditors[0],
           ),
@@ -150,7 +153,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
           width: width * 0.5,
           child: TextField(
             decoration: InputDecoration(
-              labelText: 'definition',
+              labelText: e?.key ?? 'definition',
             ),
             controller: newEditors[1],
           ),

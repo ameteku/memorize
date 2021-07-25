@@ -21,7 +21,7 @@ class _CardsPageState extends State<CardsPage> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            if (_memory != null) ...[
+            if (!widget.appState.isEndOfQuiz()) ...[
               Container(
                 height: MediaQuery.of(context).size.height * .8,
                 child: FlipCard(
@@ -54,6 +54,11 @@ class _CardsPageState extends State<CardsPage> {
                   child: Text(
                     'Quiz finished!!!',
                   )),
+              CircularProgressIndicator(
+                value: .4,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                color: Colors.black54,
+              )
             ],
           ],
         ));
