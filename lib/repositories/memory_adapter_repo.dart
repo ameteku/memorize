@@ -12,8 +12,7 @@ class MemoryAdapterRepo {
   }
 
   //add memory to adapter collection
-  void appendMemories(MemoryAdapter adapter, List<Memory> memories) {
-    adapter.addMemories(memories);
+  void updateAdapter(MemoryAdapter adapter) {
     BaseRepo.firestoreDbInstance().collection(adapterPath).doc(adapter.id).update(adapter.toJson());
   }
 
@@ -27,8 +26,7 @@ class MemoryAdapterRepo {
 
   void removeMemory(String adapterId, Memory memory) {
     BaseRepo.firestoreDbInstance().doc(adapterId).get().then((value) {
-      MemoryAdapter mem =MemoryAdapter.fromJson(value.data(), value.id)
-          ..collection?.remove(memory.key);
+      MemoryAdapter mem = MemoryAdapter.fromJson(value.data(), value.id)..collection?.remove(memory.key);
       BaseRepo.firestoreDbInstance().doc(adapterId).update(mem.toJson());
     });
   }

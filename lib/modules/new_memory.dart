@@ -29,15 +29,13 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
   //this has a list of (2 index lists)
   List<List<TextEditingController>> controllers = [];
   List<Widget> memories = [];
-
+  late double width;
   @override
   void initState() {
     super.initState();
-    if (widget.appState.memoryStatus == MemoryStatus.Edit) {
-      memories = widget.appState.memoryAdapter!.collection!.map((e) => newMemoryEntry(e: e)).toList();
-    }
+
     titleController = TextEditingController();
-    titleController?.text = memoryName;
+    titleController?.text = widget.appState.memoryAdapter!.name ?? memoryName;
   }
 
   //this creates new pair of controllers, first for the key and second for the value
@@ -53,6 +51,10 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    if (widget.appState.memoryStatus == MemoryStatus.Edit && memories.isEmpty) {
+      memories = widget.appState.memoryAdapter!.collection!.map((e) => newMemoryEntry(e: e)).toList();
+    }
     if (memories.length == 0) {
       //add initial memory entry
       memories.add(newMemoryEntry());
@@ -85,9 +87,9 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                   children: [
                     OutlinedButton(
                         onPressed: () {
-                          setState(() {
-                            memories.add(newMemoryEntry());
-                          });
+                          memories.add(newMemoryEntry());
+                          print("Added entry: length: ${memories.length}");
+                          setState(() {});
                         },
                         child: Text('Add Entry')),
                     OutlinedButton(
@@ -110,9 +112,16 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                           allMemories.add(temp);
                         }
                         //this saves the new adapter
-                        print('Adding adapter');
-                        _memoryAdapterRepo.addAdapter(MemoryAdapter(
-                            name: titleController?.text, collection: allMemories, username: widget.appState.currentUser!.id!));
+                        if (widget.appState.memoryStatus == MemoryStatus.New) {
+                          print('Adding adapter');
+
+                          _memoryAdapterRepo.addAdapter(MemoryAdapter(
+                              name: titleController?.text, collection: allMemories, username: widget.appState.currentUser!.id!));
+                        } else {
+                          print('Updating adapter');
+                          widget.appState.memoryAdapter!.collection = allMemories;
+                          _memoryAdapterRepo.updateAdapter(widget.appState.memoryAdapter!);
+                        }
                         widget.appState.memoryStatus = null;
                       },
                       child: Text('Save'),
@@ -136,29 +145,47 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
 
   Widget newMemoryEntry({Memory? e}) {
     List<TextEditingController> newEditors = addController();
-    double width = MediaQuery.of(context).size.width;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(
-          width: width * 0.5,
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: e?.value ?? 'title',
+
+    if (e != null) {
+      newEditors[0].text = e.key;
+      newEditors[1].text = e.value;
+    }
+
+    return Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: width * 0.45,
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'title',
+                ),
+                controller: newEditors[0],
+              ),
             ),
-            controller: newEditors[0],
-          ),
+            SizedBox(
+              width: width * 0.4,
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'answer',
+                ),
+                controller: newEditors[1],
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.restore_from_trash,
+                color: Colors.red,
+              ),
+            ),
+          ],
         ),
-        SizedBox(
-          width: width * 0.5,
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: e?.key ?? 'definition',
-            ),
-            controller: newEditors[1],
-          ),
-        )
-      ],
+      ),
     );
   }
 }
