@@ -67,6 +67,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetQuiz() {
+    _memoryCount = 0;
+  }
+
   bool isEndOfQuiz() => _memoryCount >= _memoryAdapter!.collection!.length;
 
   void managePop() {

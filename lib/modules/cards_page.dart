@@ -13,9 +13,24 @@ class CardsPage extends StatefulWidget {
 
 class _CardsPageState extends State<CardsPage> {
   ScrollController controller = ScrollController();
+  int score = 0;
+  int total = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    total = widget.appState.memoryAdapter!.collection!.length;
+  }
+
   @override
   Widget build(BuildContext context) {
     Memory? _memory = widget.appState.memory;
+    if (!widget.appState.isEndOfQuiz())
+      widget.appState.memoryAdapter!.collection!.forEach((element) {
+        if (element.isMemorized) {
+          score++;
+        }
+      });
 
     return Container(
         height: MediaQuery.of(context).size.height,
@@ -46,8 +61,12 @@ class _CardsPageState extends State<CardsPage> {
             ] else ...[
               IconButton(
                 onPressed: null,
-                icon: Icon(Icons.celebration),
-                iconSize: 60,
+                icon: Icon(
+                  Icons.celebration,
+                  color: Colors.deepPurple,
+                ),
+                iconSize: 100,
+                color: Colors.deepPurple,
               ),
               Center(
                   heightFactor: 20,
@@ -55,13 +74,21 @@ class _CardsPageState extends State<CardsPage> {
                     'Quiz finished!!!',
                   )),
               CircularProgressIndicator(
-                value: .4,
+                strokeWidth: 50,
+                value: score / total,
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
                 color: Colors.black54,
+                backgroundColor: Colors.blue,
               )
             ],
           ],
         ));
+  }
+
+  @override
+  void dispose() {
+    widget.appState.resetQuiz();
+    super.dispose();
   }
 
   void nextCard(bool isCorrect) {

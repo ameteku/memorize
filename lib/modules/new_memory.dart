@@ -100,7 +100,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                         for (var pair in controllers) {
                           if (pair[0].text == '' || pair[1].text == '') {
                             displayEmptyFieldDialog(context);
-                            break;
+                            return;
                           }
                         }
                         //after checking then add them all
