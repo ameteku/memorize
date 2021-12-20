@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorize/modules/login/sign_up_page.dart';
 import 'package:memorize/repositories/user_repo.dart';
@@ -205,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
       text: TextSpan(
           text: 'Mem',
           style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
+            textStyle: Theme.of(context).textTheme.headline1,
             fontSize: 30,
             fontWeight: FontWeight.w700,
             color: Color(0xffe46b10),

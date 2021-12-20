@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memorize/repositories/user_repo.dart';
 import 'package:memorize/routing/app_state.dart';
@@ -136,7 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
       text: TextSpan(
           text: 'd',
           style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
+            textStyle: Theme.of(context).textTheme.subtitle1,
             fontSize: 30,
             fontWeight: FontWeight.w700,
             color: Color(0xffe46b10),
