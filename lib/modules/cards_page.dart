@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorize/custom/flip_card.dart';
-import 'package:memorize/routing/app_state.dart';
 import 'package:memorize/models/memory.dart';
+import 'package:memorize/routing/app_state.dart';
 
 class CardsPage extends StatefulWidget {
   final AppState appState;
@@ -25,21 +25,17 @@ class _CardsPageState extends State<CardsPage> {
   @override
   Widget build(BuildContext context) {
     Memory? _memory = widget.appState.memory;
-    if (!widget.appState.isEndOfQuiz())
-      widget.appState.memoryAdapter!.collection!.forEach((element) {
-        if (element.isMemorized) {
-          score++;
-        }
-      });
+    if (!widget.appState.isEndOfQuiz()) widget.appState.memoryAdapter!.collection!.forEach((element) {});
 
     return Container(
+        color: Colors.white,
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             if (!widget.appState.isEndOfQuiz()) ...[
               Container(
                 height: MediaQuery.of(context).size.height * .8,
-                child: FlipCard(
+                child: new FlipCard(
                   memory: _memory!,
                 ),
               ),
@@ -49,6 +45,9 @@ class _CardsPageState extends State<CardsPage> {
                   OutlinedButton(
                       onPressed: () {
                         nextCard(true);
+                        setState(() {
+                          score++;
+                        });
                       },
                       child: Text('Got it!')),
                   OutlinedButton(
@@ -73,12 +72,32 @@ class _CardsPageState extends State<CardsPage> {
                   child: Text(
                     'Quiz finished!!!',
                   )),
-              CircularProgressIndicator(
-                strokeWidth: 50,
-                value: score / total,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
-                color: Colors.black54,
-                backgroundColor: Colors.blue,
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  LinearProgressIndicator(
+                    minHeight: MediaQuery.of(context).size.height * .3,
+                    value: score / total,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                    color: Colors.black54,
+                    backgroundColor: Colors.blue,
+                  ),
+                  score / total != 1
+                      ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            "${((score / total) * 100).truncate()}% correct! ",
+                            style: TextStyle(color: Colors.white, fontSize: 30),
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.center,
+                          child: Center(
+                              child: Text(
+                            "Well done!",
+                            style: TextStyle(color: Colors.white, fontSize: 40),
+                          )))
+                ],
               )
             ],
           ],

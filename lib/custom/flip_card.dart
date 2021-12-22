@@ -1,6 +1,6 @@
+import 'package:flip_card/flip_card.dart' as CustomFlip;
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flip_card/flip_card.dart' as CustomFlip;
 import 'package:memorize/models/memory.dart';
 
 class FlipCard extends StatefulWidget {
@@ -35,7 +35,7 @@ class _FlipCardState extends State<FlipCard> {
           ),
         ),
         front: Card(
-          color: Colors.black54,
+          color: Colors.green,
           child: Center(
             child: Text(
               widget.memory.value,

@@ -18,16 +18,27 @@ class _DetailPageState extends State<DetailPage> {
       alignment: Alignment.bottomCenter,
       height: MediaQuery.of(context).size.height * .9,
       child: GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: .9),
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: MediaQuery.of(context).size.aspectRatio * 1.1),
         children: [
           OptionCard(
             color: Colors.black,
             onTap: () {
               widget.appState.memory = widget.appState.memoryAdapter!.collection!.first;
             },
-            body: Text(
-              'Quiz',
-              style: TextStyle(color: Colors.white, fontSize: Constants.detailPageTextSize),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add_alert_sharp,
+                  size: 50,
+                  color: Colors.white,
+                ),
+                Text(
+                  'Quiz',
+                  style: TextStyle(color: Colors.white, fontSize: Constants.detailPageTextSize),
+                ),
+              ],
             ),
           ),
           OptionCard(
@@ -35,18 +46,36 @@ class _DetailPageState extends State<DetailPage> {
                 widget.appState.graphData = GraphData();
               },
               color: Colors.green,
-              body: Text(
-                'Progress',
-                style: TextStyle(fontSize: Constants.detailPageTextSize),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.bar_chart,
+                    size: 50,
+                  ),
+                  Text(
+                    'Progress',
+                    style: TextStyle(fontSize: Constants.detailPageTextSize),
+                  ),
+                ],
               )),
           OptionCard(
               onTap: () {
                 widget.appState.memoryStatus = MemoryStatus.Edit;
               },
               color: Colors.red,
-              body: Text(
-                'Edit',
-                style: TextStyle(fontSize: Constants.detailPageTextSize),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.edit,
+                    size: 50,
+                  ),
+                  Text(
+                    'Edit',
+                    style: TextStyle(fontSize: Constants.detailPageTextSize),
+                  ),
+                ],
               )),
           OptionCard(
             color: Colors.black,
@@ -54,9 +83,19 @@ class _DetailPageState extends State<DetailPage> {
               // widget.appState.memoryStatus = MemoryStatus.Edit;
               //create a hash of the collection id and call native share function
             },
-            body: Text(
-              'Share',
-              style: TextStyle(color: Colors.white, fontSize: Constants.detailPageTextSize),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.share,
+                  size: 50,
+                  color: Colors.white,
+                ),
+                Text(
+                  'Share',
+                  style: TextStyle(color: Colors.white, fontSize: Constants.detailPageTextSize),
+                ),
+              ],
             ),
           ),
         ],

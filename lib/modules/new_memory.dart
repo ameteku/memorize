@@ -20,7 +20,7 @@ MemoryAdapterRepo _memoryAdapterRepo = MemoryAdapterRepo();
 
 class _NewMemoryPageState extends State<NewMemoryPage> {
   final _formKey = GlobalKey<FormBuilderState>();
-  TextEditingController? titleController;
+  late TextEditingController titleController;
   FilePickerResult? spreadsheetFile;
   String memoryName = "";
 
@@ -37,12 +37,13 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
     if (widget.appState.memoryStatus == MemoryStatus.Edit) {
       totalMemories = widget.appState.memoryAdapter!.collection!.length;
       for (Memory e in widget.appState.memoryAdapter!.collection!) {
-        controllers.add([TextEditingController(text: e.value), TextEditingController(text: e.key)]);
+        controllers.add([TextEditingController(text: e.key), TextEditingController(text: e.value)]);
       }
       // memories = widget.appState.memoryAdapter!.collection!.map((e) => newMemoryEntry(memories.length, e: e)).toList();
+    } else {
+      controllers.add([TextEditingController(), TextEditingController()]);
     }
-    titleController = TextEditingController();
-    titleController?.text = widget.appState.memoryAdapter?.name ?? memoryName;
+    titleController = TextEditingController(text: widget.appState.memoryAdapter?.name ?? memoryName);
   }
 
   //this creates new pair of controllers, first for the key and second for the value
@@ -71,6 +72,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
     width = MediaQuery.of(context).size.width;
 
     return Container(
+      color: Colors.white,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
@@ -119,9 +121,8 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                           child: SizedBox(
                             width: width * 0.45,
                             child: TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Key',
-                              ),
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(labelText: 'Key', alignLabelWithHint: true),
                               controller: controllers[index][0],
                             ),
                           ),
@@ -131,6 +132,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                         child: SizedBox(
                           width: width * 0.4,
                           child: TextField(
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               labelText: 'Answer',
                             ),
@@ -171,7 +173,7 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                 OutlinedButton(
                   onPressed: () {
                     //if non are empty save all but if some are empty notify user
-                    if (titleController?.text == '') displayEmptyFieldDialog(context);
+                    if (titleController.text == '') displayEmptyFieldDialog(context);
 
                     for (var pair in controllers) {
                       if (pair[0].text == '' || pair[1].text == '') {
@@ -192,9 +194,10 @@ class _NewMemoryPageState extends State<NewMemoryPage> {
                       print('Adding adapter');
 
                       _memoryAdapterRepo.addAdapter(
-                          MemoryAdapter(name: titleController?.text, collection: allMemories, username: widget.appState.currentUser!.id!));
+                          MemoryAdapter(name: titleController.text, collection: allMemories, username: widget.appState.currentUser!.id!));
                     } else {
                       print('Updating adapter');
+                      widget.appState.memoryAdapter!.name = titleController.text;
                       widget.appState.memoryAdapter!.collection = allMemories;
                       _memoryAdapterRepo.updateAdapter(widget.appState.memoryAdapter!);
                     }

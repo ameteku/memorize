@@ -1,6 +1,6 @@
+import 'package:memorize/models/memory.dart';
 import 'package:memorize/models/memory_adapter.dart';
 import 'package:memorize/repositories/base_repo.dart';
-import 'package:memorize/models/memory.dart';
 
 class MemoryAdapterRepo {
   String adapterPath = 'adapters';
@@ -33,7 +33,7 @@ class MemoryAdapterRepo {
 
   //delete memory
   void deleteAdapter(String id) {
-    BaseRepo.firestoreDbInstance().doc(id).delete();
+    BaseRepo.firestoreDbInstance().collection(adapterPath).doc(id).delete();
   }
 
   Stream<List<MemoryAdapter>> getAllAdapters(String userId) {

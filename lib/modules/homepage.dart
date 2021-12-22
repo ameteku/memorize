@@ -26,20 +26,57 @@ class _HomePageState extends State<HomePage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<MemoryAdapter> adapters = snapshot.data!;
-            return ListView.builder(
-              itemCount: adapters.length,
-              itemBuilder: (context, index) {
-                MemoryAdapter selectedAdapters = adapters[index];
-                return GestureDetector(
-                  onTap: () {
-                    widget.appState.memoryAdapter = selectedAdapters;
-                  },
-                  child: ListTile(
-                    title: Text(selectedAdapters.name ?? "French Memory"),
-                    leading: Icon(Icons.backup_rounded),
-                  ),
-                );
-              },
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: GridView.count(
+                children: [
+                  ...adapters.map((e) {
+                    MemoryAdapter selectedAdapter = e;
+                    return MemoryCollectionCard(selectedAdapter.name!, () {
+                      widget.appState.memoryAdapter = selectedAdapter;
+                    }, longPress: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          actions: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      adapterRepo.deleteAdapter(selectedAdapter.id!);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    });
+                  }),
+                  MemoryCollectionCard("+\n New Collection", () {
+                    widget.appState.memoryStatus = MemoryStatus.New;
+                  }, color: Colors.blue)
+                ],
+                crossAxisCount: 2,
+              ),
             );
           } else {
             return Center(
@@ -47,5 +84,23 @@ class _HomePageState extends State<HomePage> {
             );
           }
         });
+  }
+
+  Widget MemoryCollectionCard(String title, VoidCallback onTouch, {Color color = Colors.white, VoidCallback? longPress}) {
+    return GestureDetector(
+        onLongPress: longPress ?? () {},
+        onTap: onTouch,
+        child: Card(
+          color: color,
+          child: Container(
+              height: 40,
+              width: 40,
+              child: Center(
+                  child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 25),
+              ))),
+        ));
   }
 }
