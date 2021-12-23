@@ -15,8 +15,8 @@ class _GraphState extends State<Graph> {
   List<String>? notMemorized;
 
   void filterMemories() {
-    wordsMemorized = widget.memoryAdapter.collection!.where((element) => element.isMemorized == true).map((e) => e.key).toList();
-    notMemorized = widget.memoryAdapter.collection!.where((element) => element.isMemorized == false).map((e) => e.key).toList();
+    wordsMemorized = widget.memoryAdapter.collection!.where((element) => true).map((e) => e.key).toList();
+    notMemorized = widget.memoryAdapter.collection!.where((element) => true).map((e) => e.key).toList();
   }
 
   @override

@@ -53,14 +53,14 @@ class AppState extends ChangeNotifier {
   getNewMemory(bool answer) {
     //update date for
     _memoryCount++;
-    _memory?.isAnswered = true;
-    _memory?.isMemorized = answer;
+    // _memory?.isAnswered = true;
+    // _memory?.isMemorized = answer;
 
     if (_memoryCount < _memoryAdapter!.collection!.length) {
       _memory = _memoryAdapter?.collection![_memoryCount];
     } else {
       _memoryAdapter?.collection?.forEach((element) {
-        element.isAnswered = false;
+        // element.isAnswered = false;
       });
     }
 

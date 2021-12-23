@@ -15,9 +15,9 @@ class ProgressPage extends StatefulWidget {
 class _ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
-    List<Memory> memorized = widget.appState.memoryAdapter!.collection!.where((element) => element.isMemorized).toList();
+    List<Memory> memorized = widget.appState.memoryAdapter!.collection!;
 
-    List<Memory> notMemorized = widget.appState.memoryAdapter!.collection!.where((element) => !element.isMemorized).toList();
+    List<Memory> notMemorized = widget.appState.memoryAdapter!.collection!;
     return Container(
       child: ListView(
         children: [

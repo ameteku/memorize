@@ -6,8 +6,6 @@ part 'memory.g.dart';
 class Memory {
   String key;
   String value;
-  bool isMemorized = false;
-  bool isAnswered = false;
 
   Memory({required this.key, required this.value});
 
