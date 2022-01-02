@@ -4,7 +4,8 @@ import 'package:memorize/models/memory_adapter.dart';
 
 class Graph extends StatefulWidget {
   final MemoryAdapter memoryAdapter;
-  const Graph({required this.memoryAdapter, Key? key}) : super(key: key);
+  final int memorizedLength;
+  const Graph({required this.memoryAdapter, required this.memorizedLength, Key? key}) : super(key: key);
 
   @override
   _GraphState createState() => _GraphState();
@@ -40,12 +41,12 @@ class _GraphState extends State<Graph> {
           centerSpaceRadius: 60,
           sections: [
             PieChartSectionData(
-                value: notMemorized!.length.toDouble(),
+                value: (widget.memoryAdapter.collection!.length - widget.memorizedLength).toDouble(),
                 color: Colors.red,
                 // titlePositionPercentageOffset: 5,
                 titleStyle: TextStyle(color: Colors.black),
                 title: "Not memorized yet"),
-            PieChartSectionData(value: wordsMemorized!.length.toDouble(), color: Colors.green, title: "Memorized!")
+            PieChartSectionData(value: widget.memorizedLength.toDouble(), color: Colors.green, title: "Memorized!")
           ]),
     );
   }

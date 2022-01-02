@@ -4,10 +4,10 @@ part "quiz.g.dart";
 
 @JsonSerializable()
 class Quiz {
-  @JsonKey()
-  late String id;
+  @JsonKey(ignore: true)
+  String? id;
   String memoryId;
-  Map<int, int> quizResult;
+  Map<String, bool> quizResult;
   String takerId;
 
   Quiz(this.memoryId, this.quizResult, this.takerId);

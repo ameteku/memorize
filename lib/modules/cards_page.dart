@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memorize/custom/flip_card.dart';
 import 'package:memorize/models/memory.dart';
+import 'package:memorize/models/quiz.dart';
+import 'package:memorize/repositories/quiz_repo.dart';
 import 'package:memorize/routing/app_state.dart';
 
 class CardsPage extends StatefulWidget {
@@ -15,17 +17,24 @@ class _CardsPageState extends State<CardsPage> {
   ScrollController controller = ScrollController();
   int score = 0;
   int total = 0;
+  late Quiz newQuiz;
+  Map<String, bool> scores = {};
+  late QuizRepo quizRepo;
 
   @override
   void initState() {
     super.initState();
     total = widget.appState.memoryAdapter!.collection!.length;
+    quizRepo = QuizRepo();
   }
 
   @override
   Widget build(BuildContext context) {
     Memory? _memory = widget.appState.memory;
-    if (!widget.appState.isEndOfQuiz()) widget.appState.memoryAdapter!.collection!.forEach((element) {});
+    if (widget.appState.isEndOfQuiz()) {
+      newQuiz = Quiz(widget.appState.memoryAdapter!.id!, scores, widget.appState.currentUser!.id!);
+      quizRepo.addQuiz(newQuiz, widget.appState.currentUser!.id!);
+    }
 
     return Container(
         color: Colors.white,
@@ -68,7 +77,7 @@ class _CardsPageState extends State<CardsPage> {
                 color: Colors.deepPurple,
               ),
               Center(
-                  heightFactor: 20,
+                  heightFactor: 15,
                   child: Text(
                     'Quiz finished!!!',
                   )),
@@ -111,6 +120,7 @@ class _CardsPageState extends State<CardsPage> {
   }
 
   void nextCard(bool isCorrect) {
+    scores[widget.appState.memory!.key] = isCorrect;
     widget.appState.getNewMemory(isCorrect);
   }
 }
